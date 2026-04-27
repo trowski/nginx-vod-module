@@ -28,6 +28,17 @@ audio_encoder_is_format_supported(const AVCodec *codec, enum AVSampleFormat samp
 {
 	const enum AVSampleFormat *p;
 
+#if LIBAVCODEC_VERSION_MAJOR >= 62
+	int num_configs;
+
+	avcodec_get_supported_config(NULL, codec, AV_CODEC_CONFIG_SAMPLE_FORMAT, 0, (const void **)&p, &num_configs);
+
+	for (int i = 0; i < num_configs; i++) {
+		if (p[i] == sample_fmt) {
+			return TRUE;
+		}
+	}
+#else
 	for (p = codec->sample_fmts; *p != AV_SAMPLE_FMT_NONE; p++)
 	{
 		if (*p == sample_fmt)
@@ -35,6 +46,7 @@ audio_encoder_is_format_supported(const AVCodec *codec, enum AVSampleFormat samp
 			return TRUE;
 		}
 	}
+#endif
 
 	return FALSE;
 }
@@ -155,7 +167,7 @@ audio_encoder_free(
 	{
 		return;
 	}
-#if AV_CODEC_USE_FREE_CONTEXT
+#if LIBAVCODEC_VERSION_MAJOR >= 62
 	avcodec_free_context(&state->encoder);
 #else
 	avcodec_close(state->encoder);

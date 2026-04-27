@@ -107,7 +107,7 @@ thumb_grabber_free_state(void* context)
 		av_freep(state->resize_buffer);
 	}
 	av_frame_free(&state->decoded_frame);
-#if AV_CODEC_USE_FREE_CONTEXT
+#if LIBAVCODEC_VERSION_MAJOR >= 62
 	avcodec_free_context(&state->encoder);
 	avcodec_free_context(&state->decoder);
 #else

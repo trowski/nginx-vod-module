@@ -124,8 +124,6 @@ void vod_log_error(vod_uint_t level, vod_log_t *log, int err,
 #define VOD_BUFFER_PADDING_SIZE (32)
 #endif
 
-#define AV_CODEC_USE_FREE_CONTEXT (LIBAVCODEC_VERSION_MAJOR >= 62)
-
 #else
 #define VOD_BUFFER_PADDING_SIZE (1)
 #endif
