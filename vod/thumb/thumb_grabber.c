@@ -107,10 +107,15 @@ thumb_grabber_free_state(void* context)
 		av_freep(state->resize_buffer);
 	}
 	av_frame_free(&state->decoded_frame);
+#if AV_CODEC_USE_FREE_CONTEXT
+	avcodec_free_context(&state->encoder);
+	avcodec_free_context(&state->decoder);
+#else
 	avcodec_close(state->encoder);
-	av_free(state->encoder);
 	avcodec_close(state->decoder);
+	av_free(state->encoder);
 	av_free(state->decoder);
+#endif
 }
 
 static vod_status_t
